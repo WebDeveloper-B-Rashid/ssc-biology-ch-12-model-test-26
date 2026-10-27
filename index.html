@@ -1,11 +1,1278 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SSC 2027 Biology MCQ Examination (Code: 138)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Bengali -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* Standard A4 Print Setup */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 12mm 10mm 12mm 10mm;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print-only {
+                display: block !important;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            .avoid-break {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .print-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 12px !important;
+            }
+
+            .shadow-lg,
+            .shadow-md,
+            .shadow-sm {
+                box-shadow: none !important;
+            }
+
+            .border {
+                border-color: #9ca3af !important;
+            }
+        }
+
+        .print-only {
+            display: none;
+        }
+
+        /* Custom Radio Button styling for interactive mode */
+        .option-label {
+            transition: all 0.15s ease-in-out;
+        }
+
+        .option-label:hover {
+            background-color: #f0fdf4;
+        }
+
+        input[type="radio"]:checked+.option-text {
+            font-weight: 600;
+            color: #15803d;
+        }
+    </style>
 </head>
-<body>
-    <h1>Biolology</h1>
+
+<body class="min-h-screen py-4 px-2 sm:px-6">
+
+    <!-- TOP CONTROL BAR (Interactive Mode Only) -->
+    <header
+        class="no-print max-w-5xl mx-auto bg-white rounded-xl shadow-md p-4 mb-6 sticky top-2 z-50 border border-green-100">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold text-green-800 flex items-center gap-2">
+                    <span>🧬</span> SSC 2027 জীববিজ্ঞান বহুনির্বাচনি পরীক্ষা
+                </h1>
+                <p class="text-xs sm:text-sm text-gray-500">বিষয় কোড: ১৩৮ | মোট প্রশ্ন: ২৫ | সময়: ২৫ মিনিট</p>
+            </div>
+
+            <!-- Timer Dashboard -->
+            <div class="flex items-center gap-3 bg-green-50 px-4 py-2 rounded-lg border border-green-200">
+                <div class="text-center border-r border-green-200 pr-3">
+                    <span class="text-xs text-gray-500 block">শুরু করার সময়</span>
+                    <span id="startTimeDisplay"
+                        class="font-mono text-xs sm:text-sm font-semibold text-gray-700">--:--:--</span>
+                </div>
+                <div class="text-center border-r border-green-200 pr-3">
+                    <span class="text-xs text-gray-500 block">অবশিষ্ট সময়</span>
+                    <span id="timerDisplay" class="font-mono text-lg sm:text-xl font-bold text-red-600">25:00</span>
+                </div>
+                <div class="text-center">
+                    <span class="text-xs text-gray-500 block">শেষ হওয়ার সময়</span>
+                    <span id="endTimeDisplay"
+                        class="font-mono text-xs sm:text-sm font-semibold text-gray-700">--:--:--</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2">
+                <button id="startBtn" onclick="startExam()"
+                    class="bg-green-600 hover:bg-green-700 text-white font-medium px-3 sm:px-4 py-2 rounded-lg text-sm shadow transition flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    পরীক্ষা শুরু করুন
+                </button>
+                <button id="submitBtn" onclick="submitExam()" disabled
+                    class="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-medium px-3 sm:px-4 py-2 rounded-lg text-sm shadow transition flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    উত্তর জমা দিন
+                </button>
+                <button onclick="window.print()"
+                    class="bg-gray-700 hover:bg-gray-800 text-white font-medium px-3 sm:px-4 py-2 rounded-lg text-sm shadow transition flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                        </path>
+                    </svg>
+                    প্রিন্ট / PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN QUESTION CONTAINER -->
+    <main class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200">
+
+        <!-- OFFICIAL EXAMINATION HEADER (Appears in Print & Top of Document) -->
+        <div class="border-b-2 border-gray-800 pb-4 mb-6 text-center">
+            <h2 class="text-2xl font-bold tracking-wide text-gray-900">এস.এস.সি পরীক্ষা ২০২৭ মডেল টেস্ট</h2>
+            <h3 class="text-xl font-bold text-gray-800 mt-1">বিষয়: জীববিজ্ঞান (সৃজনশীল বহুনির্বাচনি প্রশ্ন)</h3>
+            <div
+                class="flex justify-between items-center text-sm font-semibold mt-3 px-2 border-t border-b border-gray-300 py-1">
+                <span>বিষয় কোড: ১৩৮</span>
+                <span>সময়: ২৫ মিনিট</span>
+                <span>পূর্ণমান: ২৫</span>
+            </div>
+            <p class="text-xs text-gray-600 mt-2 italic">[ দ্রষ্টব্য: সরবরাহকৃত বহুনির্বাচনি অভিক্ষার উত্তরপত্রে
+                প্রশ্নের ক্রমিক নম্বরের বিপরীতে প্রদত্ত বর্ণসংবলিত বৃত্তক্ষেত্রটি সঠিক উত্তরের জন্য বলপেন কলম দ্বারা
+                ভরাট করো। সকল প্রশ্নের মান সমান। ]</p>
+        </div>
+
+        <!-- Student Info Header Block (Crucial for Printed Exam Sheets) -->
+        <div class="print-only border border-gray-400 p-3 rounded mb-4 text-xs">
+            <div class="grid grid-cols-3 gap-2">
+                <div><strong>পরীক্ষার্থীর নাম:</strong> ______________________</div>
+                <div><strong>রোল নং:</strong> ________________</div>
+                <div><strong>রেজিস্ট্রেশন নং:</strong> ________________</div>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mt-2">
+                <div><strong>কেন্দ্র:</strong> __________________________</div>
+                <div><strong>তারিখ:</strong> __________________</div>
+                <div><strong>স্বাক্ষর:</strong> _____________________</div>
+            </div>
+        </div>
+
+        <!-- Enhanced Result Breakdown Card -->
+        <div id="resultBox"
+            class="hidden mb-6 p-5 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 no-print shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-xl font-bold text-green-900 flex items-center gap-2">
+                        <span>🏆</span> পরীক্ষার ফলাফল বিবরণী
+                    </h3>
+                    <p class="text-sm text-green-700 mt-0.5">আপনার অর্জিত নম্বর ও সঠিক/ভুল উত্তরের হিসাব নিচে দেওয়া হলো:
+                    </p>
+                </div>
+                <div class="text-center bg-white px-6 py-2 rounded-xl shadow border border-green-300">
+                    <span id="scoreText" class="text-3xl font-extrabold text-green-700">0 / 25</span>
+                    <span id="percentageText" class="block text-xs text-gray-500 font-semibold">0% Marks</span>
+                </div>
+            </div>
+
+            <!-- Marks Stats Breakdown -->
+            <div class="grid grid-cols-3 gap-3 mt-4 text-center">
+                <div class="bg-white p-2.5 rounded-lg border border-green-200">
+                    <span class="text-xs text-gray-500 font-medium block">সঠিক উত্তর</span>
+                    <span id="correctCount" class="text-lg font-bold text-green-600">0</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-red-200">
+                    <span class="text-xs text-gray-500 font-medium block">ভুল উত্তর</span>
+                    <span id="wrongCount" class="text-lg font-bold text-red-600">0</span>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-yellow-200">
+                    <span class="text-xs text-gray-500 font-medium block">উত্তর দেওয়া হয়নি</span>
+                    <span id="unattemptedCount" class="text-lg font-bold text-amber-600">0</span>
+                </div>
+            </div>
+
+            <!-- Solutions Toggle Button -->
+            <div class="mt-4 pt-3 border-t border-green-200 text-center">
+                <button onclick="toggleSolutionsModal()"
+                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-2.5 rounded-lg shadow text-sm transition flex items-center gap-2 mx-auto">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                        </path>
+                    </svg>
+                    সম্পূর্ণ ব্যাখ্যা / সমাধান দেখুন (See Complete Solutions)
+                </button>
+            </div>
+        </div>
+
+        <!-- Questions Grid -->
+        <form id="quizForm" class="print-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Question 1 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-1">
+                <p class="font-semibold text-gray-900 mb-2">১. জীবদেহে হরমোন নিয়ে আলোচনা করা হয় কোন শাখায়?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q1" value="ক" class="mr-2 text-green-600 focus:ring-green-500">
+                        <span class="option-text">ক) হিস্টোলজি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q1" value="খ" class="mr-2 text-green-600 focus:ring-green-500">
+                        <span class="option-text">খ) সাইটোলজি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q1" value="গ" class="mr-2 text-green-600 focus:ring-green-500">
+                        <span class="option-text">গ) ইকোলজি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q1" value="ঘ" class="mr-2 text-green-600 focus:ring-green-500">
+                        <span class="option-text">ঘ) এন্ডোক্রাইনোলজি</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-2">
+                <p class="font-semibold text-gray-900 mb-2">২. টিস্যুসমূহের গঠন কোন শাখায় আলোচনা করা হয়?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q2" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) হিস্টোলজি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q2" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) এমব্রায়োলজি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q2" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) এন্ডোক্রাইনোলজি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q2" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) সাইটোলজি</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-3">
+                <p class="font-semibold text-gray-900 mb-2">৩. নিচের কোনটিতে প্রাণের বিকাশ নিয়ে আলোচনা করা হয়?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q3" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) বাস্তুবিদ্যা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q3" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) বিবর্তনবিদ্যা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q3" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) প্রাণরসায়ন</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q3" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) জীবপ্রযুক্তি</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-4">
+                <p class="font-semibold text-gray-900 mb-2">৪. পঞ্চ রাজ্য শ্রেণিবিন্যাসের প্রবক্তা কে?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q4" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) লিনিয়াস</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q4" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) অ্যারিস্টটল</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q4" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) হুইটেকার</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q4" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) মেন্ডেল</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-5">
+                <p class="font-semibold text-gray-900 mb-1">৫. প্রোটিস্টা রাজ্যের জীবের ক্ষেত্রে প্রজননের পদ্ধতি হলো-
+                </p>
+                <p class="text-xs text-gray-700 mb-2 pl-3">i. কনজুগেশন &nbsp;&nbsp; ii. মাইটোসিস &nbsp;&nbsp; iii.
+                    মিয়োসিস</p>
+                <p class="text-xs font-semibold text-gray-600 mb-1">নিচের কোনটি সঠিক?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q5" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) i ও ii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q5" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) i ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q5" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ii ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q5" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) i, ii ও iii</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-6">
+                <p class="font-semibold text-gray-900 mb-1">৬. ফানজাই সম্পর্কে সঠিক তথ্য হলো-</p>
+                <p class="text-xs text-gray-700 mb-2 pl-3">i. খাদ্য গ্রহণ শোষণ পদ্ধতিতে ঘটে<br>ii. ক্লোরোপ্লাস্ট
+                    অনুপস্থিত<br>iii. হ্যাপ্লয়েড স্পোর দিয়ে বংশবৃদ্ধি ঘটে</p>
+                <p class="text-xs font-semibold text-gray-600 mb-1">নিচের কোনটি সঠিক?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q6" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) i ও ii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q6" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) i ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q6" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ii ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q6" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) i, ii ও iii</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-7">
+                <p class="font-semibold text-gray-900 mb-2">৭. শ্রেণিবিন্যাসের সর্বোচ্চ স্তর কোনটি?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q7" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) প্রজাতি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q7" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) পর্ব</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q7" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) গণ</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q7" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) রাজ্য</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-8">
+                <p class="font-semibold text-gray-900 mb-2">৮. হ্যাপ্লয়েড স্পোর দিয়ে বংশবৃদ্ধি হয় কোনটির?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q8" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) ডায়াটম</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q8" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) ব্যাকটেরিয়া</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q8" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ইস্ট</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q8" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) অ্যামিবা</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-9">
+                <p class="font-semibold text-gray-900 mb-2">৯. Paramecium কোন রাজ্যের জীব?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q9" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) মনেরা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q9" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) প্রোটিস্টা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q9" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ফানজাই</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q9" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) প্লান্টি</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- STEM FOR 10 & 11 (Mushroom / Fungi Diagram) -->
+            <div
+                class="col-span-1 md:col-span-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm italic my-1 avoid-break flex flex-col sm:flex-row items-center gap-4">
+                <div class="flex-1">
+                    <strong class="text-amber-900 not-italic block mb-1">নিচের উদ্দীপক অনুসারে ১০ ও ১১ নং প্রশ্নের উত্তর
+                        দাও:</strong>
+                    "নিবিড় একটি বড় গাছের নিচে ছাতার মতো ছোট ছোট জীব দেখতে পায়।"
+                </div>
+                <!-- SVG Mushroom Diagram representing source attached PDF -->
+                <div class="w-20 h-20 flex-shrink-0 bg-white p-1 rounded border border-amber-300">
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <!-- Mushroom Cap -->
+                        <path d="M 15,55 Q 50,10 85,55 Z" fill="#b45309" stroke="#78350f" stroke-width="3" />
+                        <!-- Dots on Cap -->
+                        <circle cx="35" cy="35" r="4" fill="#fef3c7" />
+                        <circle cx="50" cy="25" r="5" fill="#fef3c7" />
+                        <circle cx="65" cy="38" r="4" fill="#fef3c7" />
+                        <!-- Stalk -->
+                        <path d="M 40,55 L 42,90 L 58,90 L 60,55 Z" fill="#fef3c7" stroke="#78350f" stroke-width="2" />
+                        <!-- Gills -->
+                        <line x1="25" y1="55" x2="45" y2="55" stroke="#78350f" stroke-width="1.5" />
+                        <line x1="75" y1="55" x2="55" y2="55" stroke="#78350f" stroke-width="1.5" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-10">
+                <p class="font-semibold text-gray-900 mb-2">১০. উদ্দীপকের জীবটি কোন রাজ্যের?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q10" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) Monera</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q10" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) Fungi</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q10" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) Protista</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q10" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) Plantae</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-11">
+                <p class="font-semibold text-gray-900 mb-1">১১. উদ্দীপকের জীবটি-</p>
+                <p class="text-xs text-gray-700 mb-2 pl-3">i. মৃত জীবদেহের উপর জন্মে<br>ii. ভিন্নধর্মী গ্যামেটের মিলনে
+                    বংশবৃদ্ধি করে<br>iii. কাইটিন নির্মিত কোষপ্রাচীর দ্বারা গঠিত</p>
+                <p class="text-xs font-semibold text-gray-600 mb-1">নিচের কোনটি সঠিক?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q11" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) i ও ii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q11" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) i ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q11" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ii ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q11" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) i, ii ও iii</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-12">
+                <p class="font-semibold text-gray-900 mb-2">১২. মানুষকে হেটারোট্রফিক বলা হয় কেন?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q12" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) জটিল টিস্যুতন্ত্র বিদ্যমান</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q12" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) কোষ প্রাচীর অনুপস্থিত</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q12" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) কোষ গহ্বর ছোট</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q12" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) কোষে প্লাস্টিড অনুপস্থিত</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 13 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-13">
+                <p class="font-semibold text-gray-900 mb-2">১৩. কাইটিন দিয়ে তৈরি কোষ প্রাচীর কোনটির?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q13" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) অ্যামিবা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q13" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) ডায়াটম</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q13" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) পেনিসিলিয়াম</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q13" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) প্যারামেসিয়াম</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 14 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-14">
+                <p class="font-semibold text-gray-900 mb-2">১৪. বাঙালী বিজ্ঞানী সাজিদ আলী হাওলাদার কর্তৃক আবিষ্কৃত
+                    ব্যাঙের গণের নাম কী?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q14" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) Zakerana</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q14" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) Shajidana</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q14" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) Bufo</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q14" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) Labeo</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 15 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-15">
+                <p class="font-semibold text-gray-900 mb-2">১৫. দ্বিপদ নামকরণের ভাষা কোনটি?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q15" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) ইংরেজি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q15" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) স্প্যানিশ</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q15" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) গ্রিক</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q15" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) ল্যাটিন</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 16 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-16">
+                <p class="font-semibold text-gray-900 mb-2">১৬. Hibiscus rosa-sinensis কোন উদ্ভিদের বৈজ্ঞানিক নাম?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q16" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) গোলাপ</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q16" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) কাঁঠাল</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q16" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) জবা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q16" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) আম</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 17 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-17">
+                <p class="font-semibold text-gray-900 mb-1">১৭. মানুষ প্রাইমেট বর্গের অন্তর্গত। কারণ-</p>
+                <p class="text-xs text-gray-700 mb-2 pl-3">i. আঁকড়ে ধরার মতো হাত আছে<br>ii. শ্রবণ অপেক্ষা দৃষ্টিশক্তি
+                    উন্নত<br>iii. ঘ্রাণ অপেক্ষা দৃষ্টিশক্তি উন্নত</p>
+                <p class="text-xs font-semibold text-gray-600 mb-1">নিচের কোনটি সঠিক?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q17" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) i ও ii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q17" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) i ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q17" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ii ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q17" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) i, ii ও iii</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 18 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-18">
+                <p class="font-semibold text-gray-900 mb-1">১৮. অ্যামিবাতে-</p>
+                <p class="text-xs text-gray-700 mb-2 pl-3">i. বহুকোষ আছে<br>ii. সুগঠিত নিউক্লিয়াস বিদ্যমান<br>iii. ভ্রূণ
+                    গঠিত হয় না</p>
+                <p class="text-xs font-semibold text-gray-600 mb-1">নিচের কোনটি সঠিক?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q18" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) i ও ii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q18" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) i ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q18" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ii ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q18" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) i, ii ও iii</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 19 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-19">
+                <p class="font-semibold text-gray-900 mb-2">১৯. জীববিজ্ঞানের ফলিত শাখা কোনটি?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q19" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) ভ্রূণবিদ্যা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q19" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) জিন প্রযুক্তি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q19" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) বাস্তুবিদ্যা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q19" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) জীবভূগোল</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 20 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-20">
+                <p class="font-semibold text-gray-900 mb-2">২০. কোনটি মনেরা রাজ্যের অন্তর্গত?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q20" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) ব্যাকটেরিয়া</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q20" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) অ্যামিবা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q20" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ইস্ট</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q20" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) ভুট্টা</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- STEM & DIAGRAM FOR Q21 (Image S & T) -->
+            <div class="col-span-1 md:col-span-2 p-3 bg-gray-100 border border-gray-300 rounded-lg avoid-break my-1">
+                <div class="flex flex-col sm:flex-row items-center justify-around gap-4">
+                    <!-- Image S Diagram -->
+                    <div class="text-center">
+                        <div
+                            class="w-24 h-24 bg-white border-2 border-green-700 rounded-sm p-1 mx-auto flex items-center justify-center relative">
+                            <!-- Outer cell wall representation -->
+                            <rect width="90%" height="90%" fill="none" stroke="#15803d" stroke-width="3" />
+                            <!-- Chloroplast dots -->
+                            <circle cx="20" cy="20" r="3" fill="#22c55e" />
+                            <circle cx="70" cy="25" r="3" fill="#22c55e" />
+                            <circle cx="25" cy="70" r="3" fill="#22c55e" />
+                            <!-- Large Central Vacuole -->
+                            <div
+                                class="w-12 h-12 rounded-full border border-blue-400 bg-blue-50 flex items-center justify-center text-[9px] text-blue-700">
+                                কোষ গহ্বর</div>
+                        </div>
+                        <span class="font-bold text-xs mt-1 block">চিত্র: S (উদ্ভিদ কোষ)</span>
+                    </div>
+
+                    <!-- Image T Diagram -->
+                    <div class="text-center">
+                        <div
+                            class="w-24 h-24 bg-white border-2 border-dashed border-pink-500 rounded-full p-1 mx-auto flex items-center justify-center relative">
+                            <!-- Nucleus -->
+                            <div
+                                class="w-8 h-8 rounded-full bg-purple-200 border border-purple-600 flex items-center justify-center text-[8px] font-bold">
+                                নিউক্লিয়াস</div>
+                        </div>
+                        <span class="font-bold text-xs mt-1 block">চিত্র: T (প্রাণী কোষ)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 21 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-21">
+                <p class="font-semibold text-gray-900 mb-1">২১. S এবং T উভয়ের জন্য প্রযোজ্য বৈশিষ্ট্য-</p>
+                <p class="text-xs text-gray-700 mb-2 pl-3">i. পরভোজী<br>ii. বহুকোষী<br>iii. যৌন জনন ঘটে</p>
+                <p class="text-xs font-semibold text-gray-600 mb-1">নিচের কোনটি সঠিক?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q21" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) i ও ii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q21" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) i ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q21" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ii ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q21" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) i, ii ও iii</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 22 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-22">
+                <p class="font-semibold text-gray-900 mb-2">২২. জীবকে প্রজাতি পর্যায়ে বিন্যাস আন্তর্জাতিক কোড চিহ্নিত
+                    কয়টি ধাপ আছে?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q22" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) ৫টি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q22" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) ৬টি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q22" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ৭টি</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q22" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) ৮টি</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 23 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-23">
+                <p class="font-semibold text-gray-900 mb-2">২৩. অ্যানিমেলিয়া রাজ্যের বৈশিষ্ট্য কোনটি?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q23" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) যৌন এবং অযৌন জননের মাধ্যমে বংশবৃদ্ধি ঘটে</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q23" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) এরা আর্কিগোনিয়েট</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q23" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ভ্রূণীয় স্তর সৃষ্টি হয়</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q23" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) দেহে সরল টিস্যুতন্ত্র বিদ্যমান</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- STEM FOR 24 & 25 (Filamentous Cyanobacteria / Nostoc SVG Diagram) -->
+            <div
+                class="col-span-1 md:col-span-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm my-1 avoid-break flex flex-col sm:flex-row items-center gap-4">
+                <div class="flex-1">
+                    <strong class="text-blue-900 block mb-1">নিচের উদ্দীপকটি লক্ষ্য করো এবং ২৪ ও ২৫ নং প্রশ্নের উত্তর
+                        দাও:</strong>
+                    <p class="text-xs text-gray-600">পার্শ্ববর্তী চিত্রে একটি ফিলামেন্টাস মনেরা রাজ্যের অনুজীব (নস্টক)
+                        প্রদর্শিত হলো।</p>
+                </div>
+                <!-- SVG Diagram representing Nostoc / Filamentous Algae -->
+                <div class="w-32 h-16 bg-white p-1 rounded border border-blue-300 flex items-center justify-center">
+                    <svg viewBox="0 0 160 50" class="w-full h-full">
+                        <!-- Chain of bead-like cyanobacteria cells -->
+                        <circle cx="15" cy="25" r="9" fill="#15803d" stroke="#14532d" />
+                        <circle cx="31" cy="25" r="9" fill="#15803d" stroke="#14532d" />
+                        <!-- Heterocyst cell -->
+                        <circle cx="49" cy="25" r="11" fill="#86efac" stroke="#15803d" stroke-width="2" />
+                        <circle cx="67" cy="25" r="9" fill="#15803d" stroke="#14532d" />
+                        <circle cx="83" cy="25" r="9" fill="#15803d" stroke="#14532d" />
+                        <circle cx="99" cy="25" r="9" fill="#15803d" stroke="#14532d" />
+                        <circle cx="117" cy="25" r="11" fill="#86efac" stroke="#15803d" stroke-width="2" />
+                        <circle cx="135" cy="25" r="9" fill="#15803d" stroke="#14532d" />
+                        <!-- Sheath outer outline -->
+                        <path d="M 5,25 Q 80,10 145,25" fill="none" stroke="#93c5fd" stroke-width="1.5"
+                            stroke-dasharray="3,3" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Question 24 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-24">
+                <p class="font-semibold text-gray-900 mb-2">২৪. চিত্রে প্রদর্শিত জীবটির নাম কী?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q24" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) অ্যামিবা</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q24" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) ডায়াটম</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q24" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) নস্টক</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q24" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) ব্যাকটেরিয়া</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 25 -->
+            <div class="question-block avoid-break p-3 border rounded-lg bg-gray-50/50 border-gray-200" id="q-block-25">
+                <p class="font-semibold text-gray-900 mb-1">২৫. উদ্দীপকে প্রদর্শিত জীবটির বৈশিষ্ট্য হচ্ছে-</p>
+                <p class="text-xs text-gray-700 mb-2 pl-3">i. এরা ফিলামেন্টাস<br>ii. এরা খাদ্য তৈরিতে সক্ষম<br>iii. এদের
+                    নিউক্লিয়াস সুগঠিত</p>
+                <p class="text-xs font-semibold text-gray-600 mb-1">নিচের কোনটি সঠিক?</p>
+                <div class="space-y-1 text-sm">
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q25" value="ক" class="mr-2 text-green-600">
+                        <span class="option-text">ক) i ও ii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q25" value="খ" class="mr-2 text-green-600">
+                        <span class="option-text">খ) i ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q25" value="গ" class="mr-2 text-green-600">
+                        <span class="option-text">গ) ii ও iii</span>
+                    </label>
+                    <label class="option-label flex items-center p-1.5 rounded cursor-pointer">
+                        <input type="radio" name="q25" value="ঘ" class="mr-2 text-green-600">
+                        <span class="option-text">ঘ) i, ii ও iii</span>
+                    </label>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- PRINT FOOTER -->
+        <div class="print-only border-t border-gray-400 mt-6 pt-3 text-center text-xs text-gray-600">
+            <p>SSC 2027 Biology (138) MCQ Question Bank • Page 1 of 1</p>
+        </div>
+    </main>
+
+    <!-- FULL EXPLANATIONS / SOLUTIONS MODAL CONTAINER -->
+    <div id="solutionsModal"
+        class="fixed inset-0 bg-black/60 z-50 hidden no-print flex justify-center items-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col border border-gray-300">
+            <!-- Modal Header -->
+            <div
+                class="p-4 sm:p-5 bg-gradient-to-r from-green-800 to-emerald-900 text-white rounded-t-2xl flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-bold flex items-center gap-2">
+                        <span>📖</span> ২৫টি প্রশ্নের বিস্তারিত উত্তর ও সমাধান (Detailed Solutions)
+                    </h3>
+                    <p class="text-xs text-emerald-200">এনসিটিবি নবম-দশম শ্রেণি জীববিজ্ঞান পাঠ্যবই অনুযায়ী প্রস্তুতকৃত
+                        ব্যাখ্যা</p>
+                </div>
+                <button onclick="toggleSolutionsModal()"
+                    class="text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content - Explanations List -->
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1 text-sm bg-gray-50" id="solutionsList">
+                <!-- Explanations dynamically rendered via JS -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 bg-gray-100 border-t border-gray-200 rounded-b-2xl text-right">
+                <button onclick="toggleSolutionsModal()"
+                    class="bg-gray-700 hover:bg-gray-800 text-white font-semibold px-5 py-2 rounded-lg text-sm">
+                    বন্ধ করুন (Close)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Correct Answer Key Solution Mapping
+        const correctAnswers = {
+            q1: "ঘ", q2: "ক", q3: "খ", q4: "গ", q5: "ক",
+            q6: "ঘ", q7: "ঘ", q8: "গ", q9: "খ", q10: "খ",
+            q11: "ঘ", q12: "ঘ", q13: "গ", q14: "ক", q15: "ঘ",
+            q16: "গ", q17: "ঘ", q18: "গ", q19: "খ", q20: "ক",
+            q21: "গ", q22: "গ", q23: "গ", q24: "গ", q25: "ক"
+        };
+
+        // Comprehensive Bengali Explanations for all 25 Questions
+        const detailedExplanations = {
+            q1: {
+                title: "১. জীবদেহে হরমোন নিয়ে আলোচনা করা হয় কোন শাখায়?",
+                correct: "ঘ) এন্ডোক্রাইনোলজি",
+                explain: "এন্ডোক্রাইনোলজি (Endocrinology) জীববিজ্ঞানের ভৌত শাখা যেখানে জীবদেহে হরমোন (Hormone) ও এর কার্যকারিতা এবং অন্তঃখরা গ্রন্থি নিয়ে আলোচনা করা হয়।"
+            },
+            q2: {
+                title: "২. টিস্যুসমূহের গঠন কোন শাখায় আলোচনা করা হয়?",
+                correct: "ক) হিস্টোলজি",
+                explain: "হিস্টোলজি (Histology) শাখায় জীবদেহের টিস্যুসমূহের সূক্ষ্ম গঠন, কাজ ও প্রকারভেদ নিয়ে বিস্তারিত আলোচনা করা হয়।"
+            },
+            q3: {
+                title: "৩. নিচের কোনটিতে প্রাণের বিকাশ নিয়ে আলোচনা করা হয়?",
+                correct: "খ) বিবর্তনবিদ্যা",
+                explain: "বিবর্তনবিদ্যা (Evolution) শাখায় পৃথিবীর প্রাণের উৎপত্তি, বিকাশ এবং জীবের ক্রমবিকাশ সংক্রান্ত বিষয়াবলী আলোচনা করা হয়।"
+            },
+            q4: {
+                title: "৪. পঞ্চ রাজ্য শ্রেণিবিন্যাসের প্রবক্তা কে?",
+                correct: "গ) হুইটেকার",
+                explain: "আর. এইচ. হুইটেকার (R.H. Whittaker) ১৯৬৯ সালে জীবজগৎকে পাঁচটি রাজ্যে (Monera, Protista, Fungi, Plantae, Animalia) ভাগ করার প্রস্তাব দেন।"
+            },
+            q5: {
+                title: "৫. প্রোটিস্টা রাজ্যের জীবের প্রজনন পদ্ধতি কোনটি?",
+                correct: "ক) i ও ii (কনজুগেশন ও মাইটোসিস)",
+                explain: "প্রোটিস্টা রাজ্যের জীবগুলো অয়ৌন প্রজনন (মাইটোসিস কোষ বিভাজনের মাধ্যমে) এবং কনজুগেশনের (যৌন প্রজনন) মাধ্যমে বংশবৃদ্ধি করে।"
+            },
+            q6: {
+                title: "৬. ফানজাই সম্পর্কে সঠিক তথ্য কোনটি?",
+                correct: "ঘ) i, ii ও iii",
+                explain: "ফানজাই (Fungi) বা ছত্রাকের খাদ্যগ্রহণ শোষণ পদ্ধতিতে ঘটে, এদের ক্লোরোপ্লাস্ট অনুপস্থিত (তাই পরভোজী) এবং এরা হ্যাপ্লয়েড স্পোর দিয়ে বংশবৃদ্ধি করে।"
+            },
+            q7: {
+                title: "৭. শ্রেণিবিন্যাসের সর্বোচ্চ স্তর কোনটি?",
+                correct: "ঘ) রাজ্য",
+                explain: "শ্রেণিবিন্যাসের ধাপসমূহ হলো: রাজ্য > পর্ব > শ্রেণি > বর্গ > গোত্র > গণ > প্রজাতি। সুতরাং 'রাজ্য' (Kingdom) হলো সর্বোচ্চ স্তর।"
+            },
+            q8: {
+                title: "৮. হ্যাপ্লয়েড স্পোর দিয়ে বংশবৃদ্ধি হয় কোনটির?",
+                correct: "গ) ইস্ট",
+                explain: "ইস্ট (Yeast) ফানজাই (Fungi) রাজ্যের অন্তর্ভুক্ত। এটি হ্যাপ্লয়েড স্পোর তৈরির মাধ্যমে এবং মুকুলোদগম (Budding) প্রক্রিয়ায় বংশবৃদ্ধি ঘটায়।"
+            },
+            q9: {
+                title: "৯. Paramecium কোন রাজ্যের জীব?",
+                correct: "খ) প্রোটিস্টা",
+                explain: "প্যারামেসিয়াম (Paramecium) এককোষী, সুগঠিত নিউক্লিয়াসযুক্ত এক ধরনের আণুবীক্ষণিক জীব যা প্রোটিস্টা (Protista) রাজ্যের অন্তর্ভুক্ত।"
+            },
+            q10: {
+                title: "১০. উদ্দীপকের জীবটি (ছাতার মতো ছোট জীব) কোন রাজ্যের?",
+                correct: "খ) Fungi",
+                explain: "গাছের নিচে ছাতার মতো দেখা যাওয়া জীবটি হলো মাশরুম বা এগারিকাস (Agaricus), যা ফানজাই (Fungi) রাজ্যের অন্তর্ভুক্ত।"
+            },
+            q11: {
+                title: "১১. উদ্দীপকের জীবটির (মাশরুম/ছত্রাক) বৈশিষ্ট্য কোনটি?",
+                correct: "ঘ) i, ii ও iii",
+                explain: "মাশরুম মৃতজীবী বা পচা জৈববস্তুর ওপর জন্মায়, এনাইসোগ্যামাস বা ভিন্নধর্মী গ্যামেটের মিলনে প্রজনন করে এবং কাইটিন দিয়ে গঠিত কোষপ্রাচীর বহন করে।"
+            },
+            q12: {
+                title: "১২. মানুষকে হেটারোট্রফিক বলা হয় কেন?",
+                correct: "ঘ) কোষে প্লাস্টিড অনুপস্থিত",
+                explain: "মানুষের কোষে প্লাস্টিড ও সালোকসংশ্লেষণকারী রঞ্জক না থাকায় মানুষ নিজের খাদ্য নিজে তৈরি করতে পারে না। তাই মানুষ পরভোজী বা হেটারোট্রফিক।"
+            },
+            q13: {
+                title: "১৩. কাইটিন দিয়ে তৈরি কোষ প্রাচীর কোনটির?",
+                correct: "গ) পেনিসিলিয়াম",
+                explain: "পেনিসিলিয়াম (Penicillium) এক ধরনের ছত্রাক (Fungi)। ছত্রাকের কোষপ্রাচীর কাইটিন (Chitin) নির্মিত।"
+            },
+            q14: {
+                title: "১৪. সাজিদ আলী হাওলাদার কর্তৃক আবিষ্কৃত ব্যাঙের গণের নাম কী?",
+                correct: "ক) Zakerana",
+                explain: "বাংলাদেশী তরুণ বিজ্ঞানী সাজিদ আলী হাওলাদার আবিষ্কার করেন ব্যাঙের নতুন একটি গণ, যার নাম দেওয়া হয় Zakerana (ঢাকা বিশ্ববিদ্যালয়ের শিক্ষক ড. জাকের হোসেনের নামানুসারে)।"
+            },
+            q15: {
+                title: "১৫. দ্বিপদ নামকরণের ভাষা কোনটি?",
+                correct: "ঘ) ল্যাটিন",
+                explain: "আন্তর্জাতিক নিয়মানুসারে জীববিজ্ঞানে দ্বিপদ নামকরণের (Binomial Nomenclature) ক্ষেত্রে অবশ্যই ল্যাটিন (Latin) ভাষা ব্যবহার করতে হয়।"
+            },
+            q16: {
+                title: "১৬. Hibiscus rosa-sinensis কোন উদ্ভিদের বৈজ্ঞানিক নাম?",
+                correct: "গ) জবা",
+                explain: "জবা ফুল গাছের বৈজ্ঞানিক নাম হলো Hibiscus rosa-sinensis।"
+            },
+            q17: {
+                title: "১৭. মানুষ প্রাইমেট বর্গের অন্তর্গত। কারণ-",
+                correct: "ঘ) i, ii ও iii",
+                explain: "প্রাইমেটদের হাত আঁকড়ে ধরার উপযোগী, দৃষ্টিশক্তি অত্যন্ত উন্নত (ত্রিমাত্রিক দৃষ্টি) এবং ঘ্রাণশক্তি অপেক্ষা দৃষ্টিশক্তি বেশি প্রাধান্য পায়।"
+            },
+            q18: {
+                title: "১৮. অ্যামিবাতে কোনটি সঠিক?",
+                correct: "গ) ii ও iii (সুগঠিত নিউক্লিয়াস বিদ্যমান ও ভ্রূণ গঠিত হয় না)",
+                explain: "অ্যামিবা হলো এককোষী জীব (তাই বহুকোষী নয়)। এটি প্রোটিস্টা রাজ্যের জীব হওয়ায় এতে সুগঠিত নিউক্লিয়াস থাকে এবং প্রজননে কোনো ভ্রূণ তৈরি হয় না।"
+            },
+            q19: {
+                title: "১৯. জীববিজ্ঞানের ফলিত শাখা কোনটি?",
+                correct: "খ) জিন প্রযুক্তি",
+                explain: "জিন প্রযুক্তি (Genetic Engineering) হলো জীববিজ্ঞানের একটি অন্যতম ফলিত শাখা (Applied Biology), যেখানে মানবকল্যাণে বাস্তবমুখী প্রযুক্তি প্রয়োগ করা হয়।"
+            },
+            q20: {
+                title: "২০. কোনটি মনেরা রাজ্যের অন্তর্গত?",
+                correct: "ক) ব্যাকটেরিয়া",
+                explain: "ব্যাকটেরিয়া আদি কোষযুক্ত (Prokaryotic) এককোষী অনুজীব, যা মনেরা (Monera) রাজ্যের অন্তর্ভুক্ত।"
+            },
+            q21: {
+                title: "২১. S (উদ্ভিদকোষ) এবং T (প্রাণীকোষ) উভয়ের জন্য প্রযোজ্য বৈশিষ্ট্য-",
+                correct: "গ) ii ও iii (বহুকোষী ও যৌন জনন ঘটে)",
+                explain: "উন্নত উদ্ভিদ ও প্রাণী উভয়ই বহুকোষী জীব এবং উভয়ের জীবনচক্রে যৌন জনন ঘটে। (উদ্ভিদ স্বভোজী হওয়ায় i প্রযোজ্য নয়)।"
+            },
+            q22: {
+                title: "২২. জীবকে প্রজাতি পর্যায়ে বিন্যাস করতে কয়টি প্রধান ধাপ আছে?",
+                correct: "গ) ৭টি",
+                explain: "আন্তর্জাতিক শ্রেণিবিন্যাসে ৭টি প্রধান বাধ্যতামূলক ধাপ (Taxonomic Ranks) রয়েছে: Kingdom, Phylum, Class, Order, Family, Genus, Species।"
+            },
+            q23: {
+                title: "২৩. অ্যানিমেলিয়া রাজ্যের বৈশিষ্ট্য কোনটি?",
+                correct: "গ) ভ্রূণীয় স্তর সৃষ্টি হয়",
+                explain: "অ্যানিমেলিয়া (Animalia) রাজ্যের অন্যতম প্রধান বৈশিষ্ট্য হলো এদের যৌন জননকালে ক্লিভেজ ঘটে এবং পরিস্ফুটনকালে নির্দিষ্ট ভ্রূণীয় স্তর (Embryonic layers) তৈরি হয়।"
+            },
+            q24: {
+                title: "২৪. চিত্রে প্রদর্শিত ফিলামেন্টাস জীবটির নাম কী?",
+                correct: "গ) নস্টক",
+                explain: "চিত্রটিতে শিকলের মতো গুটিযুক্ত ফিলামেন্টাস নীলচে-সবুজ শৈবাল বা সায়ানোব্যাকটেরিয়া 'নস্টক' (Nostoc) প্রদর্শিত হয়েছে।"
+            },
+            q25: {
+                title: "২৫. উদ্দীপকের জীবটির (নস্টক) বৈশিষ্ট্য হচ্ছে-",
+                correct: "ক) i ও ii (ফিলামেন্টাস ও খাদ্য তৈরিতে সক্ষম)",
+                explain: "নস্টক (Nostoc) ফিলামেন্টাস এককোষীর কলোনি এবং এতে সালোকসংশ্লেষণকারী রঞ্জক থাকায় খাদ্য তৈরি করতে পারে। এটি আদি কোষী হওয়ায় নিউক্লিয়াস সুগঠিত নয় (iii ভুল)।"
+            }
+        };
+
+        let timerInterval = null;
+        let totalSeconds = 25 * 60; // 25 minutes
+        let isExamActive = false;
+
+        function formatTime(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let seconds = date.getSeconds();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            return `${hours}:${minutes}:${seconds} ${ampm}`;
+        }
+
+        function startExam() {
+            if (isExamActive) return;
+
+            isExamActive = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('submitBtn').disabled = false;
+
+            // Set timestamps
+            const now = new Date();
+            const endDate = new Date(now.getTime() + 25 * 60 * 1000);
+
+            document.getElementById('startTimeDisplay').textContent = formatTime(now);
+            document.getElementById('endTimeDisplay').textContent = formatTime(endDate);
+
+            // Timer loop
+            timerInterval = setInterval(() => {
+                totalSeconds--;
+
+                let mins = Math.floor(totalSeconds / 60);
+                let secs = totalSeconds % 60;
+
+                mins = mins < 10 ? '0' + mins : mins;
+                secs = secs < 10 ? '0' + secs : secs;
+
+                document.getElementById('timerDisplay').textContent = `${mins}:${secs}`;
+
+                if (totalSeconds <= 300) { // last 5 minutes alert color
+                    document.getElementById('timerDisplay').classList.remove('text-red-600');
+                    document.getElementById('timerDisplay').classList.add('text-red-600', 'animate-pulse');
+                }
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("সময় শেষ হয়ে গেছে! আপনার উত্তরপত্র এখন জমা হয়ে যাবে।");
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function submitExam() {
+            if (!isExamActive && totalSeconds > 0) return;
+
+            clearInterval(timerInterval);
+            isExamActive = false;
+            document.getElementById('submitBtn').disabled = true;
+
+            // Calculate Detailed Score Breakdown
+            let score = 0;
+            let wrong = 0;
+            let unattempted = 0;
+            const totalQuestions = 25;
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const qName = `q${i}`;
+                const selectedOption = document.querySelector(`input[name="${qName}"]:checked`);
+                const qBlock = document.getElementById(`q-block-${i}`);
+
+                if (selectedOption) {
+                    if (selectedOption.value === correctAnswers[qName]) {
+                        score++;
+                        qBlock.classList.remove('bg-gray-50/50', 'border-gray-200');
+                        qBlock.classList.add('bg-green-50', 'border-green-400');
+                    } else {
+                        wrong++;
+                        qBlock.classList.remove('bg-gray-50/50', 'border-gray-200');
+                        qBlock.classList.add('bg-red-50', 'border-red-400');
+                    }
+                } else {
+                    unattempted++;
+                    qBlock.classList.remove('bg-gray-50/50', 'border-gray-200');
+                    qBlock.classList.add('bg-amber-50', 'border-amber-300');
+                }
+            }
+
+            // Update UI Score & Summary Cards
+            document.getElementById('resultBox').classList.remove('hidden');
+            document.getElementById('scoreText').textContent = `${score} / ${totalQuestions}`;
+            document.getElementById('percentageText').textContent = `${Math.round((score / totalQuestions) * 100)}% Marks`;
+
+            document.getElementById('correctCount').textContent = score;
+            document.getElementById('wrongCount').textContent = wrong;
+            document.getElementById('unattemptedCount').textContent = unattempted;
+
+            // Render detailed solutions modal content
+            renderSolutions();
+
+            // Scroll result into view
+            document.getElementById('resultBox').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function renderSolutions() {
+            const container = document.getElementById('solutionsList');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= 25; i++) {
+                const qName = `q${i}`;
+                const data = detailedExplanations[qName];
+                const selected = document.querySelector(`input[name="${qName}"]:checked`);
+                const userChoice = selected ? selected.value : null;
+                const isCorrect = userChoice === correctAnswers[qName];
+
+                let statusBadge = '';
+                let borderStyle = '';
+
+                if (!selected) {
+                    statusBadge = `<span class="bg-amber-100 text-amber-800 font-semibold px-2.5 py-0.5 rounded text-xs border border-amber-300">উত্তর দেওয়া হয়নি ⚠️</span>`;
+                    borderStyle = 'border-amber-200 bg-white';
+                } else if (isCorrect) {
+                    statusBadge = `<span class="bg-green-100 text-green-800 font-semibold px-2.5 py-0.5 rounded text-xs border border-green-300">সঠিক উত্তর ✔</span>`;
+                    borderStyle = 'border-green-300 bg-green-50/30';
+                } else {
+                    statusBadge = `<span class="bg-red-100 text-red-800 font-semibold px-2.5 py-0.5 rounded text-xs border border-red-300">ভুল উত্তর ✖</span>`;
+                    borderStyle = 'border-red-300 bg-red-50/30';
+                }
+
+                const cardHtml = `
+                    <div class="p-4 rounded-xl border ${borderStyle} shadow-sm">
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <h4 class="font-bold text-gray-900">${data.title}</h4>
+                            ${statusBadge}
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-3">
+                            <div class="p-2 rounded bg-white border border-gray-200">
+                                <span class="text-gray-500 font-medium block">সঠিক উত্তর:</span>
+                                <strong class="text-green-700 text-sm">${data.correct}</strong>
+                            </div>
+                            <div class="p-2 rounded bg-white border border-gray-200">
+                                <span class="text-gray-500 font-medium block">আপনার উত্তর:</span>
+                                <strong class="${isCorrect ? 'text-green-700' : (userChoice ? 'text-red-600' : 'text-amber-600')} text-sm">
+                                    ${userChoice ? `${userChoice}` : 'উত্তর দেওয়া হয়নি'}
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-700 leading-relaxed bg-white/80 p-3 rounded-lg border border-gray-200">
+                            <strong class="text-gray-900 font-semibold block mb-1">ব্যাখ্যা (Explanation):</strong>
+                            ${data.explain}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            }
+        }
+
+        function toggleSolutionsModal() {
+            const modal = document.getElementById('solutionsModal');
+            if (modal.classList.contains('hidden')) {
+                renderSolutions();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
+
 </html>
